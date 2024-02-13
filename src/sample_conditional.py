@@ -138,23 +138,7 @@ def parse_args():
 if __name__ == "__main__":
 
     args = parse_args()
-    # Example tensors
-    tensor_a = torch.tensor([1, 2, 3, 4, 5, 6, 7, 8])  # Shape [8]
-    tensor_b = torch.randn(8, 3, 128, 128)  # Shape [8, 3, 128, 128]
-
-    # Element-wise multiplication with broadcasting
-    a = tensor_a.unsqueeze(1).unsqueeze(2).unsqueeze(3)
-    result = tensor_a.unsqueeze(1).unsqueeze(2).unsqueeze(3) * tensor_b
-    result2 = a * tensor_b
-
-    # Print the resulting shape
-    # Print shapes
-    print("Original tensor_a shape:", tensor_a.shape)
-    print("Broadcasted tensor_a shape:", a.shape)
-    print("Original tensor_b shape:", tensor_b.shape)
-    print("Result shape:", result.shape)
-    print("Result shape:", result2.shape)
-
+   
     sampling_conditional_config.sample_batch_size= args.sample_batch_size
     sampling_conditional_config.noise_file = args.noise_file_name
     sampling_conditional_config.sampling_algorithms=args.sampling_algorithms
