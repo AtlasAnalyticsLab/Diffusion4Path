@@ -117,9 +117,7 @@ class DDPMPipeline:
             # Broadcast timestep for batch_size
             z = z_values[timestep].to(device)
             ts = timestep * torch.ones(image.shape[0], dtype=torch.long, device=device)
-            print("ts", ts)
-            print("timestep", timestep)
-
+           
             predicted_noise = model(image, ts, None, labels)
             if guide_w > 0:
                     uncond_predicted_noise = model(image, ts, None, None)
@@ -135,13 +133,6 @@ class DDPMPipeline:
             alpha_hat_prev = self.alphas_hat[timestep - 1].to(device)
             beta_t_hat = (1 - alpha_hat_prev) / (1 - alpha_hat) * beta_t
             
-            print("beta_t", beta_t.shape)
-            print("alpha_t", alpha_t, alpha_t.shape)
-            print("alpha t hat", alpha_hat,alpha_hat.shape)
-            print("alpha_hat_prev", alpha_hat_prev.shape)
-            print("beta_t_hat", beta_t_hat.shape)
-            print("image", image.shape)
-
             variance = torch.sqrt(beta_t_hat) * z if timestep > 0 else 0
 
             image = torch.pow(alpha_t, -0.5) * (image -
@@ -152,7 +143,7 @@ class DDPMPipeline:
         return images if save_all_steps else image
 
     @torch.no_grad()
-    def ddim_sampling(self, model, initial_noise, device, z_values, eta, steps,guide_w,labels, save_all_steps=False):
+    def ddim_sampling(self, model, initial_noise, device, z_values, eta, steps,guide_w,labels, epsilon_scale, improved_gamma, save_all_steps=False):
         """
         Algorithm 2 from the paper https://arxiv.org/pdf/2006.11239.pdf
         Seems like we have two variations of sampling algorithm: iterative and with reparametrization trick (equation 15)
@@ -166,7 +157,6 @@ class DDPMPipeline:
         :return:
         """
         image = initial_noise
-        print("initial noise shape", image.shape)
         images = []
 
         # Define an empty list to store timestep values
@@ -187,25 +177,35 @@ class DDPMPipeline:
             # prev_t = torch.full((image.shape[0],), time_steps_prev[timestep], device=device, dtype=torch.long)
             ts = time_steps[timestep] * torch.ones(image.shape[0], dtype=torch.long, device=device)
             prev_t = time_steps_prev[timestep] * torch.ones(image.shape[0], dtype=torch.long, device=device)
-            
+
+ 
+            #Improved Second Order sampling with DDIM
+            if improved_gamma is not None:
+                if time_steps[timestep] < time_steps[steps-1]:
+                    predicted_prev_noise = predicted_noise
+
+            #Norma DDIM Sampling
             predicted_noise = model(image, ts, None, labels)
             if guide_w > 0:
                     uncond_predicted_noise = model(image, ts, None, None)
                     predicted_noise = ((1+guide_w) * predicted_noise) - (guide_w*uncond_predicted_noise)
-
-            t_index = ts.to('cpu')
-            t_prev_index = prev_t.to('cpu')
-           
+            
+            #Epsilon scaling sampling with DDIM
+            if epsilon_scale is not None:
+                predicted_noise = predicted_noise / epsilon_scale
+            
+            #Improved Second Order sampling with DDIM
+            if improved_gamma is not None:
+                if time_steps[timestep] < time_steps[steps-1]:
+                    predicted_noise = (improved_gamma * predicted_noise) + (1-improved_gamma) * predicted_prev_noise
+            
+            
             alpha_t = self.alphas_hat[time_steps[timestep] ].to(device)
             alpha_t_prev = self.alphas_hat[time_steps_prev[timestep]].to(device)
 
             # alpha_t = alpha_t.unsqueeze(1).unsqueeze(2).unsqueeze(3)
             # alpha_t_prev = alpha_t_prev.unsqueeze(1).unsqueeze(2).unsqueeze(3)
             sigma_t = eta * torch.sqrt((1 - alpha_t_prev) / (1 - alpha_t) * (1 - alpha_t / alpha_t_prev))
-            epsilon_t = z_values[timestep].to(device)
-
-            
-            sqrt_alphat_prev_by_alpha_t = torch.sqrt(alpha_t/alpha_t_prev)
             # print(sqrt_alphat_prev_by_alpha_t, sqrt_alphat_prev_by_alpha_t.shape)
 
             image = (
@@ -215,8 +215,6 @@ class DDPMPipeline:
                         sigma_t * z
                     )
             
-            # image = (torch.sqrt(alpha_t_prev) * ((image - (torch.sqrt(1-alpha_t_prev)*predicted_noise))/torch.sqrt(alpha_t))) + (torch.sqrt(1-alpha_t_prev-(sigma_t**2))*predicted_noise) + (sigma_t*epsilon_t)
-            # image = (torch.sqrt(alpha_t_prev) * ((image - (torch.sqrt(1-alpha_t_prev)*predicted_noise))/torch.sqrt(alpha_t)))
             if save_all_steps:
                 images.append(image.cpu())
         return images if save_all_steps else image
