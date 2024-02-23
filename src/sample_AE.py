@@ -9,10 +9,10 @@ from tqdm import tqdm
 from pathlib import Path
 
 from model.unet import UNet
-from model.unet_conditional import UNet_conditional
+from LDM.src.model.LDM.ldm_unet_conditional import UNet_conditional
 from scheduler.ddpm_conditional import DDPMPipeline
 from utils.common import postprocess, create_images_grid
-from config.autoencoder import AETrainingConfig 
+from LDM.src.config.train_autoencoder import AETrainingConfig 
 from data.kgh_loader import get_dataloader
 from model.LDM.autoencoder import Autoencoder, Encoder, Decoder
 import matplotlib.pyplot as plt
