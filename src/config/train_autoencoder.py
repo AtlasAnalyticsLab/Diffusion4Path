@@ -23,13 +23,13 @@ class AETrainingConfig:
     num_classes = 5
     num_samples=50
     drop_prob = 0.1
-    image_dir="/home/de_thak/master_project/dataset/PKGH_224/"
+    image_dir="/home/de_thak/diffusion-project/dataset/PKGH_224"
     dataset = 'PKGH_224'
     # output_dir = f'/home/de_thak/git/diffusion-ddpm/1601-0533/'
     output_dir = f'/home/de_thak/diffusion-comparative/helpers/results_AE_PKGH_224/{formatted_time}/'
     generate_samples = True
     checkpoint_path = '/home/de_thak/diffusion-comparative/helpers/results_AE_PKGH_224/22_02_04_21_2/autoencoder128_e29.pth'
-    use_checkpoint = True
+    use_checkpoint = False
     conditional = False
     device = "cuda"
     seed = 0

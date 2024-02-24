@@ -31,11 +31,11 @@ class TrainingLDMConfig:
     training_algo = "ldm"
     gamma = 0.1
     # output_dir = f'/home/de_thak/git/diffusion-ddpm/1601-0533/'
-    output_dir = f'/home/de_thak/diffusion-comparative/helpers/experiments/results_conditional/PKGH_224/{training_algo}/{formatted_time}/'
+    output_dir = f'/home/de_thak/diffusion-project/helpers/experiments/results_conditional/PKGH_224/{training_algo}/{formatted_time}/'
     # /home/de_thak/diffusion-comparative/helpers/experiments/results_conditional/PKGH_224/{training_algo}/{formatted_time}/
     generate_samples = True
-    ae_checkpoint_path = '/home/de_thak/diffusion-comparative/helpers/results_AE_PKGH_224/22_02_04_21_2/autoencoder128_e29.pth'
-    checkpoint_path = '/home/de_thak/git/diffusion-ddpm/results_conditional/PKGH_224/ddpm/2701-10:50/unet128_e84.pth'
+    ae_checkpoint_path = '/home/de_thak/diffusion-project/helpers/checkpoints/autoencoder128_e29.pth'
+    checkpoint_path = '/home/de_thak/diffusion-project/results_conditional/PKGH_224/ddpm/2701-10:50/unet128_e84.pth'
     use_checkpoint = False
     conditional = True
     device = "cuda"
