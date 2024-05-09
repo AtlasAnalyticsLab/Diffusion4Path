@@ -29,12 +29,12 @@ class SampleConfig:
     training_algo = "ddpm"
     gamma = 0.1
     # output_dir = f'/home/de_thak/git/diffusion-ddpm/1601-0533/'
-    output_dir = f'/home/de_thak/git/diffusion-ddpm/final_experiments/results_conditional/PKGH_224/{training_algo}/{formatted_time}/'
-    samples_dir = f'/home/de_thak/git/diffusion-ddpm/results_conditional_samples/PKGH_224/{training_algo}/'
+    output_dir = f'/home/de_thak/diffusion-comparative/helpers/final_experiments/results_conditional/PKGH_224/{training_algo}/{formatted_time}/'
+    samples_dir = f'/home/de_thak/diffusion-comparative/helpers/results_conditional_samples/PKGH_224/{training_algo}/'
     generate_samples = True
     checkpoint_path = f'/home/de_thak/git/diffusion-ddpm/results_conditional/PKGH_224/{training_algo}/02_02_15_56/unet128_e49.pth'
     # checkpoint_path = f'/home/de_thak/git/diffusion-ddpm/results_conditional/PKGH_224/{training_algo}/02_02_20_54/unet128_e49.pth'
-    sampling_algorithms = ["ddpm","epsilon","improved_second_order"]
+    sampling_algorithms = ["ddpm","epsilon"]
     # sampling_algorithms = ["ddim","momentum"]
     # sampling_algorithms = ["ddpm","epsilon","improved_second_order","ddim","momentum"]
     noise_file = f"batch_{sample_batch_size}_1"
@@ -46,27 +46,5 @@ class SampleConfig:
 
     def __init__(self):
         print("Time", datetime.datetime.now())
-        print("Num Samples:", self.num_samples)
-        print("Training Algorithm:", self.training_algo)
-        print("Gamma(if algorithm is ddpm_ip, else None):", self.gamma)
-        print("Output Directory:", self.output_dir)
-        print("Drop Probability:", self.drop_prob)
-        print("Image Directory:", self.image_dir)
-        print("Generate Samples:", self.generate_samples)
-        print("Checkpoint Path:", self.checkpoint_path)
-        print("Image Size:", self.image_size)
-        print("Image Channels:", self.image_channels)
-        print("Train Batch Size:", self.train_batch_size)
-        print("Eval Batch Size:", self.eval_batch_size)
-        print("Num Eval Samples:", self.num_eval_samples)
-        print("Num Epochs:", self.num_epochs)
-        print("Start Epoch:", self.start_epoch)
-        print("Learning Rate:", self.learning_rate)
-        print("Diffusion Timesteps:", self.diffusion_timesteps)
-        print("Save Image Epochs:", self.save_image_epochs)
-        print("Save Model Epochs:", self.save_model_epochs)
-        print("Num Classes:", self.num_classes)
-        print("Use Checkpoint:", self.use_checkpoint)
-        print("Conditional:", self.conditional)
 
 sampling_conditional_config = SampleConfig()
