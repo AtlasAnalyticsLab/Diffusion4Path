@@ -16,9 +16,5 @@ def get_dataloader(config):
             ]
         )
     )
-    print("classes", dataset.classes)
     loader = DataLoader(dataset, batch_size=config.train_batch_size, shuffle=True)
-
     return loader
-
-# train_dataloader = get_dataloader(training_config)
